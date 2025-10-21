@@ -16,13 +16,26 @@ jobs:
 
     strategy:
       matrix:
-        branch: [master]
+        branch: [master, beta]
 
     steps:
       - name: Get latest tag from noriskclient-launcher
         id: get-tag
         run: |
-          LATEST_TAG=$(curl -s https://api.github.com/repos/NoRiskClient/noriskclient-launcher/releases/latest | jq -r '.tag_name')
+          # For master branch use the latest stable release (GitHub releases/latest is non-prerelease)
+          if [ "${{ matrix.branch }}" = "master" ]; then
+            LATEST_TAG=$(curl -s https://api.github.com/repos/NoRiskClient/noriskclient-launcher/releases/latest | jq -r '.tag_name')
+          else
+            # For beta branch pick the most recent prerelease (GitHub releases API returns newest first)
+            LATEST_TAG=$(curl -s https://api.github.com/repos/NoRiskClient/noriskclient-launcher/releases | jq -r '.[] | select(.prerelease==true) | .tag_name' | head -n1)
+          fi
+
+          if [ -z "$LATEST_TAG" ] || [ "$LATEST_TAG" = "null" ]; then
+            echo "No suitable tag found for branch '${{ matrix.branch }}'. Exiting without changes."
+            # exit 0 so the job succeeds but nothing is attempted when no release/prerelease exists
+            exit 0
+          fi
+
           echo "latest_tag=$LATEST_TAG" >> $GITHUB_OUTPUT
 
       - name: Checkout the noriskclient-launcher repository
@@ -36,6 +49,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: flathub
+          ref: ${{ matrix.branch }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -94,7 +108,7 @@ jobs:
           if [ -n "$FILES_TO_COMMIT" ] && [[ $(git status --porcelain $FILES_TO_COMMIT) ]]; then
             git add -- $FILES_TO_COMMIT
             git commit -m "chore: update flatpak dependency manifests for launcher ${LAUNCHER_VERSION}"
-            git push origin HEAD:${GITHUB_REF#refs/heads/}
+            git push origin HEAD:${{ matrix.branch }}
           else
             echo "No changes to commit."
           fi
@@ -105,7 +119,7 @@ jobs:
 
     strategy:
       matrix:
-        branch: [master] # list all branches to check
+        branch: [master, beta] # list all branches to check
 
     steps:
       - uses: actions/checkout@v4
@@ -121,4 +135,4 @@ jobs:
           GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: --update --never-fork gg.norisk.NoRiskClientLauncherV3.yml
+          args: --update --commit-only --never-fork gg.norisk.NoRiskClientLauncherV3.yml

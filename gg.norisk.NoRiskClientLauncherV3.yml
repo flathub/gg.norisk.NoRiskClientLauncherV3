@@ -43,7 +43,7 @@ modules:
         tag: v0.6.11
         x-checker-data:
           type: git
-          tag-pattern: ^v([\\d.]+)$
+          tag-pattern: ^v([\d.]+)$
           version-scheme: semantic
           is-main-source: true
       - cargo-sources.json

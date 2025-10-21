@@ -43,7 +43,7 @@ modules:
         tag: v0.6.12-beta.1
         x-checker-data:
           type: git
-          tag-pattern: ^v\d+\.\d+\.\d+-beta\.\d+$
+          tag-pattern: ^v(\d+\.\d+\.\d+-beta\.\d+)$
           version-scheme: semantic
           is-main-source: true
         commit: bf90c25d45b92dc22bcfb0f381ed6aac93735240

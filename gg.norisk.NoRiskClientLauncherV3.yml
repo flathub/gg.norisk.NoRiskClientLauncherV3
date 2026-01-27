@@ -40,13 +40,13 @@ modules:
     sources:
       - type: git
         url: https://github.com/NoRiskClient/noriskclient-launcher
-        tag: v0.6.16
+        tag: v0.6.17
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
           version-scheme: semantic
           is-main-source: true
-        commit: fef39848528f7930c50fb6fc764980c0a42c0cdc
+        commit: ac21fa0de9b6fa65bb6354645e3627af8c3e7cd5
       - cargo-sources.json
       - node-sources.json
     build-options:

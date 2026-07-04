@@ -1,7 +1,7 @@
 id: gg.norisk.NoRiskClientLauncherV3
 
 runtime: org.gnome.Platform
-runtime-version: '49'
+runtime-version: '50'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
@@ -9,14 +9,18 @@ sdk-extensions:
 
 command: noriskclient-launcher-v3
 finish-args:
-  - --socket=wayland
-  - --socket=fallback-x11
+  # - --socket=wayland
+  - --socket=x11
   - --socket=pulseaudio
   - --device=dri
   - --env=WEBKIT_DISABLE_DMABUF_RENDERER=1
   - --env=WEBKIT_DISABLE_COMPOSITING_MODE=1
   # For discord RPC
-  - --filesystem=xdg-run/app/com.discordapp.Discord:create
+  # Flatpak discord
+  - --filesystem=xdg-run/app/com.discordapp.Discord:rw
+  # System Discord
+  - --env=DISCORD_IPC_PATH=/run/user/$UID/discord-ipc-0  
+  - --filesystem=xdg-run/discord-ipc-0:rw
   - --share=ipc
   - --share=network
   # Mod drag & drop
@@ -42,13 +46,13 @@ modules:
     sources:
       - type: git
         url: https://github.com/NoRiskClient/noriskclient-launcher
-        tag: v0.6.22
+        tag: v0.6.24
         x-checker-data:
           type: git
           tag-pattern: ^v([\d.]+)$
           version-scheme: semantic
           is-main-source: true
-        commit: a49dc292e42fd9c6bfb72fcae33292eb95425114
+        commit: 9ffb0e6000f6527b1b75d8cbc8f58a2e8a5366e4
       - cargo-sources.json
       - node-sources.json
     build-options:

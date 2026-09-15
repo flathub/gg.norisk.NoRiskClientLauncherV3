@@ -42,7 +42,7 @@ flatpak build-bundle repo norisk-client-launcher.flatpak gg.norisk.NoRiskClientL
 
 ## Maintainers
 
--   Greenman999 (@Greeenman999)
+- [@TimLohrer](https://github.com/TimLohrer)
 
 ## License
 

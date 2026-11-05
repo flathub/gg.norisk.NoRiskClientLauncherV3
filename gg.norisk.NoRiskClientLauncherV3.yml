@@ -46,7 +46,7 @@ modules:
           tag-pattern: ^v(\d+\.\d+\.\d+-beta\.\d+)$
           version-scheme: semantic
           is-main-source: true
-        commit: 3a6f562114064b621635dcb3c9f20d5b09af3a64
+        commit: c0224d4d4f42c83fa3cf95dc87e3e514802fa379
       - cargo-sources.json
       - node-sources.json
     build-options:

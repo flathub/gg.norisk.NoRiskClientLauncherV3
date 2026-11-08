@@ -13,6 +13,8 @@ finish-args:
   - --socket=fallback-x11
   - --socket=pulseaudio
   - --device=dri
+  # Fixes flickering/glitched window with WebKitGTK GBM buffer allocation (esp. NVIDIA)
+  - --env=WEBKIT_DMABUF_RENDERER_DISABLE_GBM=1
   # For discord RPC
   - --filesystem=xdg-run/app/com.discordapp.Discord:create
   - --share=ipc
